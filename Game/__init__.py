@@ -1,6 +1,8 @@
 import sys
 import pygame
 import PlayerShipClass
+import EnemyClass
+import EnemiesControllerClass
 
 pygame.init()
 
@@ -15,6 +17,8 @@ background = pygame.image.load("../Resources/Images/space.PNG")
 backgroundRect = background.get_rect()
 
 playerShip = PlayerShipClass.PlayerShip("../Resources/Images/playerShip.png", size)
+
+enemyController = EnemiesControllerClass.EnemiesController(size)
 
 keyRightDown = False
 keyLeftDown = False
@@ -62,6 +66,9 @@ while True:
 
     # Handle displaying the bullets
     playerShip.moveBulletsAndDisplay(screen)
+
+    enemyController.moveEnemies()
+    enemyController.displayEnemies(screen)
 
     playerShip.display(screen)
     pygame.display.flip()
