@@ -4,6 +4,8 @@ import PlayerShipClass
 
 pygame.init()
 
+pygame.mixer.init()
+
 size = width, height = 720, 480
 black = 0, 0, 0
 
@@ -17,7 +19,11 @@ playerShip = PlayerShipClass.PlayerShip("../Resources/Images/playerShip.png", si
 keyRightDown = False
 keyLeftDown = False
 
-while 1:
+# Primary game loop
+
+while True:
+
+    # Event handling
 
     for event in pygame.event.get():
         # Handle quitting
@@ -33,11 +39,17 @@ while 1:
                 keyRightDown = True
                 keyLeftDown = False
 
+            # Handle shooting
+            if event.key == pygame.K_SPACE:
+                playerShip.shoot()
+
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT:
                 keyLeftDown = False
             if event.key == pygame.K_RIGHT:
                 keyRightDown = False
+
+    # Flags are set to handle moving side to side
 
     if keyLeftDown:
         playerShip.move(-PlayerShipClass.PlayerShip.ShipSpeed, 0)
@@ -47,5 +59,9 @@ while 1:
 
     screen.fill(black)
     screen.blit(background, backgroundRect)
+
+    # Handle displaying the bullets
+    playerShip.moveBulletsAndDisplay(screen)
+
     playerShip.display(screen)
     pygame.display.flip()
