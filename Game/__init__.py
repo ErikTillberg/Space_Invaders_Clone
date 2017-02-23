@@ -1,10 +1,10 @@
 import sys
 import pygame
+import PlayerShipClass
 
 pygame.init()
 
 size = width, height = 720, 480
-speed = [2, 2]
 black = 0, 0, 0
 
 screen = pygame.display.set_mode(size)
@@ -12,10 +12,40 @@ screen = pygame.display.set_mode(size)
 background = pygame.image.load("../Resources/Images/space.PNG")
 backgroundRect = background.get_rect()
 
+playerShip = PlayerShipClass.PlayerShip("../Resources/Images/playerShip.png", size)
+
+keyRightDown = False
+keyLeftDown = False
+
 while 1:
+
     for event in pygame.event.get():
+        # Handle quitting
         if event.type == pygame.QUIT: sys.exit()
+
+        # handle pressing buttons
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT:
+                keyLeftDown = True
+                keyRightDown = False
+
+            if event.key == pygame.K_RIGHT:
+                keyRightDown = True
+                keyLeftDown = False
+
+        if event.type == pygame.KEYUP:
+            if event.key == pygame.K_LEFT:
+                keyLeftDown = False
+            if event.key == pygame.K_RIGHT:
+                keyRightDown = False
+
+    if keyLeftDown:
+        playerShip.move(-PlayerShipClass.PlayerShip.ShipSpeed, 0)
+
+    if keyRightDown:
+        playerShip.move(PlayerShipClass.PlayerShip.ShipSpeed, 0)
 
     screen.fill(black)
     screen.blit(background, backgroundRect)
+    playerShip.display(screen)
     pygame.display.flip()
