@@ -33,6 +33,8 @@ class EnemiesController:
                 xloc = EnemiesController.FARTHEST_LEFT_ENEMY_LOC_X
                 yloc += EnemiesController.ENEMY_Y_SPACING
 
+        self.explosionSound = pygame.mixer.Sound("../Resources/Sounds/explosion.wav")
+
     def createEnemy(self, x, y):
         enemy = EnemyClass.Enemy(x, y)
         EnemiesController.EnemyList.append(enemy)
@@ -67,6 +69,7 @@ class EnemiesController:
 
             # If there was a collision, remove the enemy that was collided with
             if (len(collisions) > 0):
+                self.explosionSound.play()
                 EnemiesController.EnemyList.remove(enemy)
 
             for collisionIndex in collisions:
