@@ -1,6 +1,7 @@
 import pygame
 import EnemyClass
 import PlayerShipClass
+import random
 
 class EnemiesController:
 
@@ -15,7 +16,7 @@ class EnemiesController:
 
     ENEMY_SPEED_Y = 1
     ENEMY_FRAME_MOVE = 0
-    ENEMY_MOVE_ON_FRAME = 5
+    ENEMY_MOVE_ON_FRAME = 1
 
     def __init__(self, size):
 
@@ -36,13 +37,17 @@ class EnemiesController:
         self.explosionSound = pygame.mixer.Sound("../Resources/Sounds/explosion.wav")
 
     def createEnemy(self, x, y):
-        enemy = EnemyClass.Enemy(x, y)
+        enemy = EnemyClass.Enemy(x, y, self.screenSize)
         EnemiesController.EnemyList.append(enemy)
 
     def moveEnemies(self):
 
+        # This function also allows the enemies to shoot bullets on some chance
         if (EnemiesController.ENEMY_FRAME_MOVE%EnemiesController.ENEMY_MOVE_ON_FRAME == 0):
             for enemy in EnemiesController.EnemyList:
+                shouldShoot = random.random() < 0.005  # Shoots 1/200 frames
+                if shouldShoot:
+                    enemy.shoot()
                 enemy.move(0, EnemiesController.ENEMY_SPEED_Y)
 
         EnemiesController.ENEMY_FRAME_MOVE += 1

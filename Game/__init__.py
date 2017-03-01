@@ -3,6 +3,7 @@ import pygame
 import PlayerShipClass
 import EnemyClass
 import EnemiesControllerClass
+import time
 
 pygame.init()
 
@@ -23,9 +24,15 @@ enemyController = EnemiesControllerClass.EnemiesController(size)
 keyRightDown = False
 keyLeftDown = False
 
+timer = pygame.time.Clock()
+
+timeStart = time.clock()
+
 # Primary game loop
 
-while True:
+running = True
+
+while running:
 
     # Event handling
 
@@ -65,10 +72,16 @@ while True:
     screen.blit(background, backgroundRect)
 
     # Handle displaying the bullets
-    playerShip.moveBulletsAndDisplay(screen)
+    collided = playerShip.moveBulletsAndDisplay(screen)
+
+    # If you collided, then stop the game, because you lost.
+    if (collided):
+        running = False
+        print("You lasted: " + str(time.clock()-timeStart) + " seconds, wow good job.")
 
     enemyController.moveEnemies()
     enemyController.displayEnemies(screen)
 
     playerShip.display(screen)
     pygame.display.flip()
+    timer.tick(60)

@@ -1,5 +1,6 @@
 import pygame
 import BulletClass
+from EnemiesControllerClass import EnemiesController
 
 class PlayerShip:
 
@@ -43,11 +44,16 @@ class PlayerShip:
         xLoc = self.shipRect.x + self.shipRect.w/4
         yLoc = self.shipRect.y
 
-        bullet = BulletClass.Bullet(xLoc, yLoc, PlayerShip.BULLET_RESOURCE)
+        bullet = BulletClass.Bullet(xLoc, yLoc, PlayerShip.BULLET_RESOURCE, "player")
         PlayerShip.Bullets.append(bullet)
         self.bulletSound.play()
 
     def moveBulletsAndDisplay(self, screen):
+
+        collided = self.checkCollisionForEnemyBullets()
+
+        if (collided):
+            return True
 
         for bullet in PlayerShip.Bullets:
 
@@ -56,5 +62,14 @@ class PlayerShip:
             if bullet.bulletRect.y < 0:
                 PlayerShip.Bullets.remove(bullet)
             else: # Otherwise proceed as normal
-                bullet.move()
+                bullet.move("player")
                 bullet.display(screen)
+
+    def checkCollisionForEnemyBullets(self):
+
+        for enemy in EnemiesController.EnemyList:
+            for bullet in enemy.bullets:
+                if (bullet.bulletRect.colliderect(self.shipRect)):
+                    enemy.bullets.remove(bullet)
+                    print("You lose sucka!")
+                    return True
