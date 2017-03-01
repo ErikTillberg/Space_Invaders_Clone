@@ -68,6 +68,14 @@ class PlayerShip:
     def checkCollisionForEnemyBullets(self):
 
         for enemy in EnemiesController.EnemyList:
+
+            # Check for actual collision with the enemy
+            if (enemy.enemyRect.colliderect(self.shipRect)):
+                EnemiesController.EnemyList.remove(enemy)
+                print("You lose sucka!")
+                return True
+
+            # Check for a collision with that enemies bullets
             for bullet in enemy.bullets:
                 if (bullet.bulletRect.colliderect(self.shipRect)):
                     enemy.bullets.remove(bullet)

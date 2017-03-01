@@ -42,9 +42,29 @@ class EnemiesController:
 
     def moveEnemies(self):
 
+        # If there are no more enemies on the screen, add more, and increment the number of enemies added to the screen
+        if len(EnemiesController.EnemyList) == 0:
+            xloc = EnemiesController.FARTHEST_LEFT_ENEMY_LOC_X
+            yloc = EnemiesController.FARTHEST_LEFT_ENEMY_LOC_Y
+            EnemiesController.INITIAL_ENEMY_COUNT += 4
+            # Build more enemies number of enemies
+            for i in range(0, EnemiesController.INITIAL_ENEMY_COUNT):
+                self.createEnemy(xloc, yloc)
+
+                xloc += EnemiesController.ENEMY_X_SPACING
+                if (xloc + EnemyClass.Enemy.WIDTH > self.screenSize[0]):
+                    xloc = EnemiesController.FARTHEST_LEFT_ENEMY_LOC_X
+                    yloc += EnemiesController.ENEMY_Y_SPACING
+
         # This function also allows the enemies to shoot bullets on some chance
         if (EnemiesController.ENEMY_FRAME_MOVE%EnemiesController.ENEMY_MOVE_ON_FRAME == 0):
             for enemy in EnemiesController.EnemyList:
+
+                # If an enemy is off the screen, remove them.
+                if (enemy.enemyRect.y > self.screenSize[1]):
+                    EnemiesController.EnemyList.remove(enemy)
+                    continue
+
                 shouldShoot = random.random() < 0.005  # Shoots 1/200 frames
                 if shouldShoot:
                     enemy.shoot()

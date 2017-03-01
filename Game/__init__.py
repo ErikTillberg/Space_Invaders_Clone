@@ -8,6 +8,9 @@ import time
 pygame.init()
 
 pygame.mixer.init()
+pygame.font.init()
+
+font = pygame.font.SysFont("Comic Sans MS", 30)
 
 size = width, height = 720, 480
 black = 0, 0, 0
@@ -85,3 +88,21 @@ while running:
     playerShip.display(screen)
     pygame.display.flip()
     timer.tick(60)
+
+# This is just the game over screen, you cannot return.
+
+loseStr = "You lasted: " + "{0:.2f}".format(time.clock()-timeStart) + " seconds, wow good job."
+loseText = font.render("Game Over.", True, (255, 255, 255))
+moreLoseText = font.render(loseStr, True, (255, 255, 255))
+
+while True:
+    for event in pygame.event.get():
+        # Handle quitting
+        if event.type == pygame.QUIT: sys.exit()
+
+    screen.fill(black)
+    screen.blit(background, backgroundRect)
+
+    screen.blit(loseText, (size[0]/4, size[1]/4))
+    screen.blit(moreLoseText, (size[0]/8, size[1]/2))
+    pygame.display.flip()
